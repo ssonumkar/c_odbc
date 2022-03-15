@@ -4,6 +4,7 @@
 #include <string.h>
 #include "../settings/setting_configs.h"
 #include "helper_funcs/metadata.c"
+#include "helper_funcs/datatype.c"
 
 void prepare(SQLHDBC dbc)
 {
@@ -16,6 +17,8 @@ void prepare(SQLHDBC dbc)
 	SQLLEN datalen = sizeof(SQL_CHAR);
 
 	SQLPrepare(stmt, QUERY_STRING, SQL_NTS);
-	printf("fetching metadata: \n");
-	getMetadata(stmt);
+	// printf("fetching metadata: \n");
+	// getMetadata(stmt);
+	// getDatatypeInfo(stmt, SQL_ALL_TYPES);
+	display_results(stmt);
 }

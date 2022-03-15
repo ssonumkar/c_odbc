@@ -1,3 +1,4 @@
 
-#define CONNECTION_STRING "driver=<driver_loc>;server=<server>;port=443;database=<db name>;Uid=<uid>;Pwd=<pass>;warehouse=<warehouse>;schema=<schema>;role=<role>;"
-#define QUERY_STRING "<enter query>"
+#define CONNECTION_STRING "conn_string"
+	// query := "select *from demo_semi_structured_1;	"
+#define QUERY_STRING "select *from test_datatypes;"

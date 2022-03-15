@@ -4,7 +4,7 @@
 #include "prepare/prepare.c"
 #include "error/handle_errors.c"
 
-int main()
+void main()
 {
   SQLHENV env;
   SQLHDBC dbc;
@@ -26,6 +26,7 @@ int main()
   {
     fprintf(stderr, "Failed to connect\n");
     extract_error("SQLDriverConnect", dbc, SQL_HANDLE_DBC);
+    return;
   }
 
   printf("Connected\n");

@@ -3,7 +3,13 @@
 #include <sqlext.h>
 #include <string.h>
 #include "../../driver_files/sf_odbc.h"
-
+#define PERSONID_LEN  2
+#define LASTNAME_LEN  255
+#define FIRSTNAME_LEN 255
+#define ADDRESS_LEN 255
+#define CITY_LEN  255
+#define MAXCOLS 10
+#define TRUE 1
 
 void getMetadata(SQLHSTMT stmt)
 {
@@ -18,6 +24,73 @@ void getMetadata(SQLHSTMT stmt)
 		SQLDescribeCol(stmt, i + 1, buf, sizeof(buf), &l, &sqltype, &size, &decimal, &nullable);
 		printf("Column %u : name: %s, datatype: %d\n", i, buf, sqltype);
 	}
+}
+
+void display_results(SQLHSTMT hstmt)
+{
+    SQLCHAR         colname[32];        // column name
+    SQLSMALLINT     coltype;            // column type
+    SQLSMALLINT     colnamelen;         // length of column name
+    SQLSMALLINT     nullable;           // whether column can have NULL value
+    SQLLEN          collen[MAXCOLS];    // array of column lengths
+    SQLSMALLINT     decimaldigits;      // no of digits if column is numeric
+    SQLLEN          outlen[MAXCOLS];    // lengths of column values returned
+    SQLCHAR *       data[MAXCOLS];      // buffers for retrieving column values
+    SQLRETURN       retcode;            // general return code
+    SQLLEN          displaysize;        // drivers column display size
+    SQLINTEGER      i,j;
+    SQLSMALLINT columns;
+
+    // Initialise data array
+  
+
+    // Get number of columns from prepared statement
+    retcode=SQLNumResultCols(hstmt, &columns);
+   
+    printf ("Number of columns is %i\n", (int) columns);
+    printf ("Use SQLDescribeCol to obtain column details\n");
+
+    for (i = 0; i < columns; i++)
+    {
+        // for each column from the prepared statement in hstmt, get the
+        // column name, type, column size, decimal digits, and nullability
+        retcode = SQLDescribeCol (hstmt,
+                                  (SQLUSMALLINT)i+1,
+                                  colname,
+                                  sizeof (colname),
+                                  &colnamelen,
+                                  &coltype,
+                                  &collen[i],
+                                  &decimaldigits,
+                                  &nullable);
+
+        
+
+        displaysize=0;
+        // get Maximum number of characters required to display data
+        // from the column.
+		char type_name[250];
+		SQLLEN type ;
+        SQLColAttribute (hstmt,
+						(SQLUSMALLINT)i+1,
+						SQL_COLUMN_TYPE_NAME,
+						&type_name, 
+						250, 
+						NULL, 
+						NULL);
+		SQLColAttribute (hstmt,
+						(SQLUSMALLINT)i+1,
+						SQL_COLUMN_TYPE,
+						NULL, 
+						SQL_IS_SMALLINT, 
+						NULL, 
+						&type);
+		printf("name: %s:\n\t type_describe_col: %d\n\t type_SQLColAttri: %ld\n\t type_name: %s\n", colname, coltype, type, type_name);
+        /* set column length to max of display length, and column name
+           length. Plus one byte for null terminator       */
+       }
+
+    
 }
 // void getMetadata1(SQLHSTMT hstmt)
 // {
